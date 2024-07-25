@@ -4,7 +4,7 @@ import GUI from 'lil-gui'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
-
+import { GroundedSkybox } from 'three/examples/jsm/Addons.js'
 /**
  * Loaders
  */
@@ -73,17 +73,25 @@ gui.add(scene.environmentRotation, 'y').min(0).max(Math.PI * 2).step(0.001).name
 //     }
 // )
 
-textureLoader.load('/environmentMaps/blockadesLabsSkybox/anime_art_style_japan_streets_with_cherry_blossom_.jpg', (e) => {
-    e.mapping = THREE.EquirectangularReflectionMapping
-    e.colorSpace = THREE.SRGBColorSpace
-    scene.background = e
-    scene.environment = e
-})
-// environMap.mapping = THREE.EquirectangularReflectionMapping
-// environMap.colorSpace = THREE.SRGBColorSpace
+// textureLoader.load('/environmentMaps/blockadesLabsSkybox/anime_art_style_japan_streets_with_cherry_blossom_.jpg', (e) => {
+//     e.mapping = THREE.EquirectangularReflectionMapping
+//     e.colorSpace = THREE.SRGBColorSpace
+//     scene.background = e
+//     scene.environment = e
+// })
 
-// scene.backround = environMap
-// scene.environment = environMap
+// HDR (RGBE) equirectangular
+rgbeLoader.load(
+    '/environmentMaps/2/2k.hdr',
+    (envMap) => {
+        envMap.mapping = THREE.EquirectangularRefractionMapping
+        scene.environment = envMap
+
+        const skybox = new GroundedSkybox(envMap, 15, 70)
+        skybox.position.y = 15
+        scene.add(skybox)
+    }
+)
 
 
 /**
